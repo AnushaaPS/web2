@@ -391,21 +391,131 @@
   }
 }
 
-  @media (max-width:768px){
+ @media (max-width:768px){
 
     nav{
-        padding:12px 15px;
-        justify-content:center;
+        padding:12px 16px !important;
+        height:70px;
     }
 
     .nav-logo{
-        font-size:1.1rem;
+        font-size:1rem;
     }
 
-    .nav-links,
+    .menu-toggle{
+        display:block;
+    }
+
     .nav-cta{
         display:none;
     }
+
+    .nav-links{
+        position:fixed;
+        top:70px;
+        left:0;
+        width:100%;
+        background:rgba(2,4,8,0.98);
+        backdrop-filter:blur(20px);
+
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:0;
+
+        max-height:0;
+        overflow:hidden;
+
+        transition:max-height .4s ease;
+        border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .nav-links.active{
+        max-height:400px;
+    }
+
+    .nav-links li{
+        width:100%;
+        text-align:center;
+    }
+
+    .nav-links a{
+        display:block;
+        width:100%;
+        padding:18px 20px;
+        border-bottom:1px solid rgba(255,255,255,.05);
+    }
+
+    /* Other existing mobile styles */
+
+    #stats{
+        grid-template-columns:1fr !important;
+    }
+
+    .services-grid{
+        grid-template-columns:1fr !important;
+    }
+
+    .work-grid{
+        grid-template-columns:1fr !important;
+    }
+
+    .testi-grid{
+        grid-template-columns:1fr !important;
+    }
+
+    footer{
+        flex-direction:column;
+        gap:15px;
+        text-align:center;
+    }
+}
+
+ @media (max-width:768px){
+
+    body{
+        cursor:auto;
+    }
+
+    #cursor,
+    #cursor-trail{
+        display:none;
+    }
+}
+ /* =========================
+   HAMBURGER MENU
+========================= */
+
+.menu-toggle{
+    display:none;
+    width:42px;
+    height:42px;
+    background:none;
+    border:none;
+    cursor:pointer;
+    position:relative;
+    z-index:1001;
+}
+
+.menu-toggle span{
+    display:block;
+    width:24px;
+    height:2px;
+    margin:5px auto;
+    background:var(--neon-cyan);
+    transition:.3s ease;
+}
+
+.menu-toggle.active span:nth-child(1){
+    transform:translateY(7px) rotate(45deg);
+}
+
+.menu-toggle.active span:nth-child(2){
+    opacity:0;
+}
+
+.menu-toggle.active span:nth-child(3){
+    transform:translateY(-7px) rotate(-45deg);
 }
 </style>
 </head>
@@ -416,15 +526,23 @@
 <canvas id="bg-canvas"></canvas>
 
 <!-- NAV -->
-<nav>
+<nav id="navbar">
   <div class="nav-logo">Nexus</div>
-  <ul class="nav-links">
+
+  <ul class="nav-links" id="navLinks">
     <li><a href="#services">Services</a></li>
     <li><a href="#work">Work</a></li>
     <li><a href="#process">Process</a></li>
     <li><a href="#cta">Contact</a></li>
   </ul>
+
   <button class="nav-cta">Start a Project</button>
+
+  <button class="menu-toggle" id="menuToggle">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 </nav>
  
 <!-- HERO -->
@@ -929,6 +1047,36 @@ document.body.appendChild(prog);
 window.addEventListener('scroll',()=>{
   const s=window.scrollY,d=document.documentElement.scrollHeight-window.innerHeight;
   prog.style.width=(s/d*100)+'%';
+});
+
+ /* =========================
+   MOBILE MENU
+========================= */
+
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.getElementById('navLinks');
+
+menuToggle.addEventListener('click', () => {
+    menuToggle.classList.toggle('active');
+    navLinks.classList.toggle('active');
+});
+
+/* Close menu when link clicked */
+
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        menuToggle.classList.remove('active');
+        navLinks.classList.remove('active');
+    });
+});
+
+/* Close menu on resize */
+
+window.addEventListener('resize', () => {
+    if(window.innerWidth > 768){
+        menuToggle.classList.remove('active');
+        navLinks.classList.remove('active');
+    }
 });
 </script>
 </body>
